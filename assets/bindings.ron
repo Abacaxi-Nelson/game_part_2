@@ -1,0 +1,26 @@
+(
+    axes: {
+        "move_x": Emulated(
+            pos: Key(Right),
+            neg: Key(Left),
+        ),
+        "move_y": Emulated(
+            pos: Key(Up),
+            neg: Key(Down),
+        ),
+        "player_x": Emulated(
+            pos: Key(D),
+            neg: Key(A),
+        ),
+        "player_y": Emulated(
+            pos: Key(W),
+            neg: Key(S),
+        ),
+        "zoom": MouseWheel( horizontal: false ),
+    },
+    actions: {
+        "menu": [ [Key(M)], ],
+        "rotate_world_left": [ [Key(Comma)], ],
+        "rotate_world_right": [ [Key(Period)], ]
+    },
+)
