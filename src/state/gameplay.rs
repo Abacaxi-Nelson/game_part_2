@@ -13,6 +13,10 @@ use crate::component::rule::Rules;
 use super::def::CurrentState;
 use super::def::Game;
 use super::def::UserAction;
+use super::winner::WinnerState;
+use super::def::WinnerMessage;
+
+
 
 pub struct GameplayState;
 impl SimpleState for GameplayState {
@@ -24,9 +28,26 @@ impl SimpleState for GameplayState {
     let storage = SpriteSheetStorage::new(world);
     world.insert(storage);
 
+    let game = Game::default();
+    world.insert(game);
+
+    initialise_result(world);
     initialise_scoreboard(world);
     initialise_players(world);
     initialise_camera(world);
+  }
+
+  fn update(&mut self, data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {  
+    let game = data.world.write_resource::<Game>();
+    match game.user_action {
+      UserAction::ShowWinner => return Trans::Push(Box::new(WinnerState)),
+      _ => ()
+    }; 
+    Trans::None
+  }
+  
+  fn on_resume(&mut self, mut data: StateData<'_, GameData<'_, '_>>) {
+    data.world.write_resource::<Game>().current_state = CurrentState::GamePlay;
   }
 }
 
@@ -74,14 +95,25 @@ fn initialise_players(world: &mut World) {
 
 } 
 
+fn initialise_result(world: &mut World) {
+  let winner_message_transform = UiTransform::new(
+    "winner_message".to_string(), Anchor::Middle, Anchor::Middle,
+    0., 0., 99., 600., 150.,
+  );
+
+  let winner = WinnerMessage::new(world, winner_message_transform, String::from(""));
+  world.insert(winner);
+}
+
+
 fn initialise_scoreboard(world: &mut World) {
   
-  let user_transform = UiTransform::new(
+  let opponent_transform = UiTransform::new(
       "opponent".to_string(), Anchor::TopMiddle, Anchor::TopMiddle,
       -150., -150., 1., 200., 150.,
   );
   
-  let opponent_transform = UiTransform::new(
+  let user_transform = UiTransform::new(
       "user".to_string(), Anchor::TopMiddle, Anchor::TopMiddle,
       150., -150., 1., 200., 150.,
   );

@@ -7,8 +7,8 @@ use amethyst::{
 
 #[derive(Default)]
 pub struct ScoreBoard {
-    pub score_left: i32,
-    pub score_right: i32,
+    pub user_score: i32,
+    pub opponent_score: i32,
 }
 
 /// ScoreText contains the ui text components that display the score

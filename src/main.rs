@@ -14,6 +14,7 @@ use amethyst::{
 mod state;
 mod component;
 mod sprite;
+mod system;
 
 fn main() -> amethyst::Result<()> {
     amethyst::start_logger(Default::default());
@@ -29,6 +30,7 @@ fn main() -> amethyst::Result<()> {
     let game_data = GameDataBuilder::default()
         .with_bundle(TransformBundle::new())?   
         .with_bundle(input_bundle)?
+        .with(system::gameplay::GamePlaySystem, "gameplay_system", &["input_system"])
         .with_bundle(UiBundle::<StringBindings>::new())?
         .with_bundle(
             RenderingBundle::<DefaultBackend>::new()
@@ -42,7 +44,6 @@ fn main() -> amethyst::Result<()> {
     
 
     let mut game = Application::new(assets_dir, state::gameplay::GameplayState, game_data)?;
-    
     game.run();
 
     Ok(())
